@@ -40,21 +40,22 @@ def load_model_and_tokenizer(model_name):
     loading_strategies = []
     
     # 策略1：FP16直接加载
-    loading_strategies.append({
-        "name": "双GPU FP16直接加载",
-        "params": {
-            "dtype": torch.float16,
-            "device_map": "auto",
-            "cache_dir": model_dir,
-            "low_cpu_mem_usage": True,
-            "trust_remote_code": True,
-            "max_memory": {
-                0: "44GB",
-                1: "44GB",
-                "cpu": "100GB"
+    if not "Next" in model_name:
+        loading_strategies.append({
+            "name": "双GPU FP16直接加载",
+            "params": {
+                "dtype": torch.float16,
+                "device_map": "auto",
+                "cache_dir": model_dir,
+                "low_cpu_mem_usage": True,
+                "trust_remote_code": True,
+                "max_memory": {
+                    0: "44GB",
+                    1: "44GB",
+                    "cpu": "100GB"
+                }
             }
-        }
-    })
+        })
 
     try:
         import bitsandbytes
